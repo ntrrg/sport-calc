@@ -1,0 +1,13 @@
+clone:
+  git:
+    image: plugins/git
+    depth: 1
+pipeline:
+  test:
+    image: golang:1.10.3-alpine
+    commands:
+      - apk update && apk add git make
+      - export PACKAGE="$(go env GOPATH)/src/github.com/ntrrg/sport-calc"
+      - mkdir -p $(dirname $PACKAGE)
+      - ln -sf "$PWD" "$PACKAGE"
+      - cd "$PACKAGE" && make ci
