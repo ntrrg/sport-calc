@@ -12,16 +12,20 @@ import (
 func Mux() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.Handle("/", HomeMux())
-	// mux.Handle("/", http.FileServer(http.Dir("")))
+	mux.Handle(
+		"/forms/",
+		http.StripPrefix("/forms", http.FileServer(http.Dir("static"))),
+	)
+
+	mux.Handle("/teams/", http.StripPrefix("/teams", TeamsMux()))
 
 	return mux
 }
 
-func HomeMux() *http.ServeMux {
+func TeamsMux() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.Handle("/", nthttp.AdaptFunc(Home, nthttp.JSONResponse()))
+	mux.Handle("/", nthttp.AdaptFunc(Teams, nthttp.JSONResponse()))
 
 	return mux
 }

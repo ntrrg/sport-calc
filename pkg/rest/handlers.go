@@ -10,7 +10,11 @@ import (
 	"github.com/ntrrg/sport-calc/pkg/api"
 )
 
-func Home(w http.ResponseWriter, req *http.Request) {
-	name := "Hello World"
-	json.NewEncoder(w).Encode(api.Person{Name: name})
+func Teams(w http.ResponseWriter, req *http.Request) {
+	teams := []api.Team {
+		{Name: "Millan"},
+		{Name: "EMBCE"},
+	}
+
+	json.NewEncoder(w).Encode(teams)
 }
