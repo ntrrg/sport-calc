@@ -72,6 +72,10 @@ lint-md:
 qa: deps
 	CGO_ENABLED=0 gometalinter.v2 --tests --disable=interfacer ./...
 
+.PHONY: run
+run: deps
+	go run main.go
+
 .PHONY: test
 test: deps
 	go test -race -v ./...
