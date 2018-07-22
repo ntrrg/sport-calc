@@ -21,7 +21,7 @@ func Mux() *http.ServeMux {
 func HomeMux() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.Handle("/", nthttp.AdaptFunc(HomeHandler, nthttp.JSONResponse()))
+	mux.Handle("/", nthttp.AdaptFunc(Home, nthttp.JSONResponse()))
 
 	return mux
 }

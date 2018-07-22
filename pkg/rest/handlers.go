@@ -6,9 +6,11 @@ package rest
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/ntrrg/sport-calc/pkg/api"
 )
 
-func HomeHandler(w http.ResponseWriter, req *http.Request) {
+func Home(w http.ResponseWriter, req *http.Request) {
 	name := "Hello World"
-	json.NewEncoder(w).Encode(Person{Name: name})
+	json.NewEncoder(w).Encode(api.Person{Name: name})
 }

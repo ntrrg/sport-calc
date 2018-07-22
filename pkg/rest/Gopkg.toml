@@ -19,6 +19,10 @@
 #   name = "github.com/x/y"
 #   version = "2.4.0"
 
+ignored = [
+  "github.com/ntrrg/sport-calc/pkg/api",
+]
+
 [prune]
   non-go = true
   go-tests = true
