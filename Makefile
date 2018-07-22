@@ -10,7 +10,7 @@ benchmark: deps
 
 .PHONY: build
 build: deps
-	go build -i main.go
+	go build -o $$(basename $$PWD) main.go
 
 .PHONY: build-docker
 build-docker:
@@ -74,7 +74,7 @@ qa: deps
 
 .PHONY: run
 run: deps
-	go run main.go
+	go run -race main.go
 
 .PHONY: test
 test: deps
