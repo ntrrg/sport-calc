@@ -9,7 +9,7 @@ import (
 
 	nthttp "github.com/ntrrg/ntgo/net/http"
 
-	. "github.com/ntrrg/sport-calc/pkg"
+	"github.com/ntrrg/sport-calc/pkg/rest"
 )
 
 var cfg nthttp.Config
@@ -31,5 +31,5 @@ func init() {
 
 	flag.Parse()
 
-	cfg.Handler = Mux()
+	cfg.Handler = rest.Mux()
 }

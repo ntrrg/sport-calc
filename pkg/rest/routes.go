@@ -1,7 +1,7 @@
 // Copyright 2018 Miguel Angel Rivera Notararigo. All rights reserved.
 // This source code was released under the MIT license.
 
-package pkg
+package rest
 
 import (
 	"net/http"
@@ -13,6 +13,7 @@ func Mux() *http.ServeMux {
 	mux := http.NewServeMux()
 
 	mux.Handle("/", HomeMux())
+	// mux.Handle("/", http.FileServer(http.Dir("")))
 
 	return mux
 }

@@ -12,7 +12,7 @@ $ go get -u github.com/ntrrg/sport-calc/...
 ## Usage
 
 ```shell-session
-$ sport-calc [-p :PORT]
+$ sport-calc [-addr ADDRESS]
 ```
 
 ## Uninstall

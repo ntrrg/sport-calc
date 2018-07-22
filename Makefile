@@ -1,11 +1,12 @@
 gofiles := $(shell find . -iname "*.go" -type f)
+coverage_file := coverage.txt
 
 .PHONY: all
 all: build
 
 .PHONY: benchmark
 benchmark: deps
-	go test -bench . -benchmem ./...
+	go test -race -bench . -benchmem ./...
 
 .PHONY: build
 build: deps
@@ -23,17 +24,17 @@ ci: test lint qa coverage benchmark
 
 .PHONY: clean
 clean:
-	rm -f coverage.out
+	rm -f $(coverage_file)
 
 .PHONY: coverage
 coverage: deps
-	@go test -covermode count -coverprofile coverage.out ./... > /dev/null
-	go tool cover -func coverage.out
+	@go test -race -coverprofile $(coverage_file) ./... > /dev/null
+	go tool cover -func $(coverage_file)
 
 .PHONY: coverage-web
 coverage-web: deps
-	@go test -covermode count -coverprofile coverage.out ./... > /dev/null
-	go tool cover -html coverage.out
+	@go test -race -coverprofile $(coverage_file) ./... > /dev/null
+	go tool cover -html $(coverage_file)
 
 .PHONY: deps
 deps:
@@ -41,7 +42,9 @@ deps:
 		|| (go get -u gopkg.in/alecthomas/gometalinter.v2 \
 		&& gometalinter.v3 --install)
 	@which dep > /dev/null 2> /dev/null || go get github.com/golang/dep/cmd/dep
-	@cd pkg && dep ensure
+	@for PKG in $(shell find . -name Gopkg.toml -exec dirname {} \;); do \
+		(cd $$PKG && dep ensure) \
+	done
 
 .PHONY: docs
 docs:
@@ -71,5 +74,5 @@ qa: deps
 
 .PHONY: test
 test: deps
-	go test -v ./...
+	go test -race -v ./...
 
