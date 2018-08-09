@@ -4,12 +4,15 @@
 [[projects]]
   branch = "master"
   name = "github.com/ntrrg/ntgo"
-  packages = ["net/http"]
-  revision = "74970dd84a4cfdffb3de079e2ad6e3b289fc4c61"
+  packages = [
+    "net/http",
+    "net/http/middleware"
+  ]
+  revision = "b8aca3b59b8c92098880c34f0705b4fe09e30567"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ccb38cbf6f22db35b4bac189503532f3a7261a320ee683bfa2b30fd0970bdda8"
+  inputs-digest = "edbebe731ffd1005d193e590d1d804991df4317e94c4f7689f26707daefdab7a"
   solver-name = "gps-cdcl"
   solver-version = 1

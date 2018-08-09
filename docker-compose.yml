@@ -1,0 +1,40 @@
+version: "3.6"
+services:
+  db:
+    image: dgraph/dgraph
+    volumes:
+      - type: volume
+        source: db-zero
+        target: /dgraph
+        volume:
+          nocopy: true
+    ports:
+      - 5080:5080 # REST
+      - 6080:6080 # gRPC
+    restart: on-failure
+    command: dgraph zero --my db:5080
+  db-server:
+    depends_on:
+      - db
+    image: dgraph/dgraph
+    volumes:
+      - type: volume
+        source: db-server
+        target: /dgraph
+        volume:
+          nocopy: true
+    ports:
+      - 8080:8080 # REST
+      - 9080:9080 # gRPC
+    restart: on-failure
+    command: dgraph server --my db-server:7080 --lru_mb 2048 --zero db:5080
+  db-ratel:
+    depends_on:
+      - db-server
+    image: dgraph/dgraph:latest
+    ports:
+      - 8000:8000
+    command: dgraph-ratel
+volumes:
+  db-zero:
+  db-server:

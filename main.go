@@ -5,7 +5,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log"
 
 	nthttp "github.com/ntrrg/ntgo/net/http"
 
@@ -16,7 +16,9 @@ var cfg nthttp.Config
 
 func main() {
 	srv := nthttp.NewServer(cfg)
-	fmt.Println(srv.ListenAndServe())
+
+	srv.Handler = rest.Mux(srv)
+	log.Println(srv.ListenAndServe())
 	<-srv.Done
 }
 
@@ -30,6 +32,4 @@ func init() {
 	)
 
 	flag.Parse()
-
-	cfg.Handler = rest.Mux()
 }

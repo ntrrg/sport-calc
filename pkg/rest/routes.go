@@ -7,17 +7,21 @@ import (
 	"net/http"
 
 	nthttp "github.com/ntrrg/ntgo/net/http"
+	"github.com/ntrrg/ntgo/net/http/middleware"
 )
 
-func Mux() *http.ServeMux {
+func Mux(server *nthttp.Server) *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.Handle(
-		"/forms/",
-		http.StripPrefix("/forms", http.FileServer(http.Dir("static"))),
-	)
+	mux.Handle("/", http.FileServer(http.Dir("static")))
 
-	mux.Handle("/teams/", http.StripPrefix("/teams", TeamsMux()))
+	mux.Handle("/teams/", middleware.Adapt(
+		TeamsMux(),
+		middleware.StripPrefix("/teams"),
+		middleware.JSONResponse(),
+		middleware.Cache("max-age=3600, s-max-age=3600"),
+		middleware.Gzip(-1),
+	))
 
 	return mux
 }
@@ -25,7 +29,7 @@ func Mux() *http.ServeMux {
 func TeamsMux() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.Handle("/", nthttp.AdaptFunc(Teams, nthttp.JSONResponse()))
+	mux.HandleFunc("/", Teams)
 
 	return mux
 }

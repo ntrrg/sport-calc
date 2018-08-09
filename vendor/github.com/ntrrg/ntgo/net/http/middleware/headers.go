@@ -1,33 +1,9 @@
 // Copyright 2018 Miguel Angel Rivera Notararigo. All rights reserved.
 // This source code was released under the MIT license.
 
-package http
+package middleware
 
 import "net/http"
-
-// Adapter is a wrapper for http.Handler. Takes a http.Handler as argument and
-// creates a new one that may run code before and/or after calling the given.
-type Adapter func(http.Handler) http.Handler
-
-// Adapt wraps a http.Handler into a list of Adapters. Takes a http.Handler
-// and a list of Adapters, which will be wrapped from right to left (and ran
-// left to right).
-func Adapt(h http.Handler, a ...Adapter) http.Handler {
-	for i := len(a) - 1; i >= 0; i-- {
-		h = a[i](h)
-	}
-
-	return h
-}
-
-// AdaptFunc works as Adapt but for http.HandlerFunc.
-func AdaptFunc(h http.HandlerFunc, a ...Adapter) http.Handler {
-	return Adapt(h, a...)
-}
-
-// ############################################################################
-//                                   Headers
-// ############################################################################
 
 // AddHeader creates/appends a HTTP header before calling the http.Handler.
 func AddHeader(key, value string) Adapter {
@@ -65,8 +41,41 @@ func SetHeader(key, value string) Adapter {
 	}
 }
 
-// JSONResponse prepares the response to be a JSON response. This adds the
-// respectives headers.
+// Cache sets HTTP cache headers for GET requests.
+//
+// Directives
+//
+// * public/private: whether the cached response is for any or a specific user.
+//
+// * max-age=TIME: cache life time in seconds. The maximum value is 1 year.
+//
+// * s-max-age=TIME: same as max-age, but this one has effect in proxies.
+//
+// * must-revalidate: force expired cached response revalidation, even in
+// special circumstances (like slow connections, were cached responses are used
+// even after they had expired).
+//
+// * proxy-revalidate: same as must-revalidate, but this one has effect in
+// proxies.
+//
+// * no-cache: disables cache.
+//
+// * no-store: disables cache, even in proxies.
+func Cache(directives string) Adapter {
+	return func(h http.Handler) http.Handler {
+		nh := func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				w.Header().Set("Cache-Control", directives)
+			}
+
+			h.ServeHTTP(w, r)
+		}
+
+		return http.HandlerFunc(nh)
+	}
+}
+
+// JSONResponse prepares the response to be a JSON response.
 func JSONResponse() Adapter {
 	return SetHeader("Content-Type", "application/json; charset=utf-8")
 }

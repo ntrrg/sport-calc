@@ -2,14 +2,10 @@
 // This source code was released under the MIT license.
 
 /*
-Package http provides some utilities commonly used in HTTP projects.
-
-Middleware
-
-Adds the flexibility to run extra functionalities at the request-response
-process. For this purpose, the Adapter pattern is used, which consist in
-wrapping handlers. An adapter may run code before and/or after the handler it
-is wrapping.
+Package middleware provides flexibility at the HTTP request/response process.
+For this purpose, the Adapter pattern is used, which consist in wrapping
+handlers. An adapter may run code before and/or after the handler it is
+wrapping.
 
 	func MyAdapter(h http.Handler) http.Handler {
 		nh := func(w http.ResponseWriter, r *http.Request) {
@@ -40,4 +36,4 @@ execution flow depends in the order that the adapters were given.
 
 7. f1 after code
 */
-package http
+package middleware

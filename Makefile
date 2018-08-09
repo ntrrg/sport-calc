@@ -40,11 +40,9 @@ coverage-web: deps
 deps:
 	@which gometalinter.v2 > /dev/null 2> /dev/null \
 		|| (go get -u gopkg.in/alecthomas/gometalinter.v2 \
-		&& gometalinter.v3 --install)
+		&& gometalinter.v2 --install)
 	@which dep > /dev/null 2> /dev/null || go get github.com/golang/dep/cmd/dep
-	@for PKG in $(shell find . -name Gopkg.toml -exec dirname {} \;); do \
-		(cd $$PKG && dep ensure) \
-	done
+	@dep ensure
 
 .PHONY: docs
 docs:
